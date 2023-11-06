@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:perf_tracker/models/model.dart';
-import 'package:perf_tracker/utils/main.dart';
 
 enum PerformanceType { none }
 
@@ -69,8 +68,6 @@ class PerformanceNotifier extends StateNotifier<PerformanceState> {
         .toSingle();
 
     int? exerciseId = exercise?.id;
-
-    printDebug(exercise, before: "=");
 
     if (exercise == null) {
       exercise = Exercise(

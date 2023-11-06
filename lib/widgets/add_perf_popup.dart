@@ -33,6 +33,9 @@ class _AddPerfPopupState extends ConsumerState<AddPerfPopup> {
     final List<Exercise> exercises = ref.watch(exerciseProvider).exercises;
     final performanceNotifier = ref.read(performanceProvider.notifier);
 
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+
     return AlertDialog(
       surfaceTintColor: Colors.white,
       content: SingleChildScrollView(
@@ -165,9 +168,11 @@ class _AddPerfPopupState extends ConsumerState<AddPerfPopup> {
               performanceNotifier.changeDate(_selectedDate);
 
               await performanceNotifier.addPerf();
+              navigator.pop();
+              ref.read(exerciseProvider.notifier).load();
             } catch (e) {
               if (e is String) {
-                ScaffoldMessenger.of(context).showSnackBar(
+                scaffoldMessenger.showSnackBar(
                   SnackBar(
                     backgroundColor: Colors.red,
                     content: Text(
