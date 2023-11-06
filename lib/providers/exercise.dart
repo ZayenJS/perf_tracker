@@ -39,6 +39,17 @@ class ExerciseNotifier extends StateNotifier<ExerciseState> {
 
     return null;
   }
+
+  Future<int> getExerciceId(String name) async {
+    final exercise = await Exercise().select().name.equals(name).toSingle();
+
+    if (exercise == null) {
+      final newExercise = await addExercise(name);
+      return newExercise!.id!;
+    }
+
+    return exercise.id!;
+  }
 }
 
 final exerciseProvider = StateNotifierProvider<ExerciseNotifier, ExerciseState>(

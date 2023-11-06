@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:perf_tracker/class/performance_detail.dart';
 import 'package:perf_tracker/models/model.dart';
 import 'package:perf_tracker/providers/exercise.dart';
+import 'package:perf_tracker/utils/main.dart';
 import 'package:perf_tracker/widgets/add_perf_popup.dart';
 import 'package:searchfield/searchfield.dart';
 
@@ -18,6 +19,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   final TextEditingController _exerciseNameController = TextEditingController();
   final TextEditingController _setsController = TextEditingController();
   final TextEditingController _repsController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
 
   final List<PerformanceDetail> _results = [];
   bool _isLoading = false;
@@ -26,6 +28,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final List<Exercise> exercises = ref.watch(exerciseProvider).exercises;
     final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -93,6 +96,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(width: 32.0),
+                Expanded(
+                  child: TextField(
+                    controller: _weightController,
+                    onTapOutside: (event) {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                    },
+                    decoration: const InputDecoration(
+                      label: Text("Weight"),
+                    ),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      signed: true,
+                      decimal: true,
+                    ),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 16.0),
@@ -114,10 +133,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     .toSingle();
 
                 if (exercise == null) {
-                  scaffoldMessenger.showSnackBar(
-                    const SnackBar(
-                      content: Text("Nothing found for this exercise"),
-                    ),
+                  showSnackBar(
+                    scaffoldMessenger,
+                    theme,
+                    "Nothing found for this exercise",
+                    isError: true,
                   );
 
                   setState(() {
@@ -146,14 +166,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   );
                 }
 
+                if (_weightController.text != "") {
+                  queryBuilder = queryBuilder.and.where(
+                    "weight = ?",
+                    parameterValue: _weightController.text,
+                  );
+                }
+
                 final performances =
                     await queryBuilder.orderByDesc("created_at").toList();
 
                 if (performances.isEmpty) {
-                  scaffoldMessenger.showSnackBar(
-                    const SnackBar(
-                      content: Text("Nothing found with these filters"),
-                    ),
+                  showSnackBar(
+                    scaffoldMessenger,
+                    theme,
+                    "Nothing found with these filters",
+                    isError: true,
                   );
 
                   setState(() {

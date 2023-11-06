@@ -31,10 +31,12 @@ class _AddPerfPopupState extends ConsumerState<AddPerfPopup> {
   @override
   Widget build(BuildContext context) {
     final List<Exercise> exercises = ref.watch(exerciseProvider).exercises;
+    final exerciseNotifier = ref.read(exerciseProvider.notifier);
     final performanceNotifier = ref.read(performanceProvider.notifier);
 
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
+    final theme = Theme.of(context);
 
     return AlertDialog(
       surfaceTintColor: Colors.white,
@@ -59,8 +61,6 @@ class _AddPerfPopupState extends ConsumerState<AddPerfPopup> {
                         (e) => SearchFieldListItem<Exercise>(
                           e.name!,
                           item: e,
-                          // Use child to show Custom Widgets in the suggestions
-                          // defaults to Text widget
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(e.name!),
@@ -90,9 +90,6 @@ class _AddPerfPopupState extends ConsumerState<AddPerfPopup> {
                   decoration: const InputDecoration(
                     label: Text("Reps"),
                   ),
-                  onChanged: (value) {
-                    performanceNotifier.changeReps(int.tryParse(value));
-                  },
                   keyboardType: const TextInputType.numberWithOptions(
                     signed: true,
                     decimal: false,
@@ -106,8 +103,6 @@ class _AddPerfPopupState extends ConsumerState<AddPerfPopup> {
                   decoration: const InputDecoration(
                     label: Text("Weight"),
                   ),
-                  onChanged: (value) =>
-                      performanceNotifier.changeWeight(double.tryParse(value)),
                   keyboardType: const TextInputType.numberWithOptions(
                     signed: true,
                     decimal: true,
@@ -144,7 +139,10 @@ class _AddPerfPopupState extends ConsumerState<AddPerfPopup> {
           style: ElevatedButton.styleFrom(surfaceTintColor: Colors.white),
           onPressed: () async {
             setState(() {
-              performanceNotifier.reset();
+              _exerciseNameController.clear();
+              _setsController.clear();
+              _repsController.clear();
+              _weightController.clear();
               _selectedDate = now;
             });
           },
@@ -157,31 +155,38 @@ class _AddPerfPopupState extends ConsumerState<AddPerfPopup> {
           ),
           onPressed: () async {
             try {
-              performanceNotifier
-                  .changeExerciseName(_exerciseNameController.text);
-              performanceNotifier
-                  .changeReps(int.tryParse(_repsController.text));
-              performanceNotifier
-                  .changeSets(int.tryParse(_setsController.text));
-              performanceNotifier
-                  .changeWeight(double.tryParse(_weightController.text));
-              performanceNotifier.changeDate(_selectedDate);
+              if (_exerciseNameController.text.isEmpty) {
+                throw "Exercise name is required";
+              }
 
-              await performanceNotifier.addPerf();
-              navigator.pop();
+              final exerciceId = await exerciseNotifier
+                  .getExerciceId(_exerciseNameController.text);
+
+              final performance = Performance(
+                exercise_id: exerciceId,
+                reps: int.tryParse(_repsController.text),
+                sets: int.tryParse(_setsController.text),
+                weight: double.tryParse(_weightController.text),
+                created_at: _selectedDate,
+              );
+
+              await performanceNotifier.addPerf(performance);
               ref.read(exerciseProvider.notifier).load();
+
+              navigator.pop();
+
+              showSnackBar(
+                scaffoldMessenger,
+                theme,
+                "Performance added",
+              );
             } catch (e) {
               if (e is String) {
-                scaffoldMessenger.showSnackBar(
-                  SnackBar(
-                    backgroundColor: Colors.red,
-                    content: Text(
-                      e,
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                showSnackBar(
+                  scaffoldMessenger,
+                  theme,
+                  e,
+                  isError: true,
                 );
               }
             }
