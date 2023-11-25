@@ -113,6 +113,15 @@ class PerformanceNotifier extends StateNotifier<PerformanceState> {
 
     return performances;
   }
+
+  Future<bool> deletePerf(int id) async {
+    final result = await Performance()
+        .select()
+        .where("id = ?", parameterValue: id)
+        .delete(true);
+
+    return result.success;
+  }
 }
 
 final performanceProvider =

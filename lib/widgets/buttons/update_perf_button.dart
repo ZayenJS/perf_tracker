@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:workout_performance_tracker/class/perf_popup_return.dart';
 import 'package:workout_performance_tracker/class/performance_detail.dart';
 import 'package:workout_performance_tracker/models/model.dart';
 import 'package:workout_performance_tracker/providers/exercise.dart';
@@ -57,13 +58,16 @@ class UpdatePerfButton extends ConsumerWidget {
               ref.read(exerciseProvider.notifier).load();
 
               navigator.pop(
-                PerformanceDetail(
-                  id: performance.id,
-                  name: data.name,
-                  reps: performance.reps!,
-                  sets: performance.sets!,
-                  weight: performance.weight!,
-                  date: performance.created_at!,
+                PerfPopupReturn(
+                  data: PerformanceDetail(
+                    id: performance.id,
+                    name: data.name,
+                    reps: performance.reps!,
+                    sets: performance.sets!,
+                    weight: performance.weight!,
+                    date: performance.created_at!,
+                  ),
+                  deleted: false,
                 ),
               );
 

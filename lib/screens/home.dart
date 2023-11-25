@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:workout_performance_tracker/class/app_file_system.dart';
+import 'package:workout_performance_tracker/class/perf_popup_return.dart';
 import 'package:workout_performance_tracker/class/performance_detail.dart';
 import 'package:workout_performance_tracker/class/performance_source.dart';
 import 'package:workout_performance_tracker/models/model.dart';
@@ -54,21 +55,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   void _onRowTap(PerformanceDetail data) async {
-    final updatedPerf = await showDialog<PerformanceDetail>(
+    final result = await showDialog<PerfPopupReturn>(
       context: context,
       builder: (BuildContext context) {
         return PerfPopup(data: data);
       },
     );
 
-    if (updatedPerf == null) {
+    if (result == null) {
+      return;
+    }
+
+    final perf = result.data;
+
+    if (perf == null) {
       return;
     }
 
     setState(() {
-      // replace the old performance with the updated one
-      final oldPerfIndex = _results.indexWhere((p) => p.id == updatedPerf.id);
-      _results[oldPerfIndex] = updatedPerf;
+      if (result.deleted) {
+        _results.removeWhere((p) => p.id == perf.id);
+      } else {
+        // replace the old performance with the updated one
+        final oldPerfIndex = _results.indexWhere((p) => p.id == perf.id);
+        _results[oldPerfIndex] = perf;
+      }
 
       _updateTableData();
       _onSort(_sortColumnIndex, _sortAscending);
@@ -371,12 +382,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               icon: const Icon(Icons.add),
               onPressed: () async {
-                final newPerf = await showDialog(
+                final result = await showDialog<PerfPopupReturn>(
                   context: context,
                   builder: (BuildContext context) {
                     return const PerfPopup();
                   },
                 );
+
+                if (result == null) {
+                  return;
+                }
+
+                final newPerf = result.data;
 
                 if (newPerf == null) {
                   return;

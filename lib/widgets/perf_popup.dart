@@ -151,7 +151,16 @@ class _PerfPopupState extends ConsumerState<PerfPopup> {
   List<Widget> _buildActions() {
     final actions = _isInUpdateMode
         ? [
-            const DeletePerfButton(),
+            DeletePerfButton(
+              latestData: () => PerformanceDetail(
+                id: widget.data?.id,
+                name: _exerciseNameController.text.trim(),
+                sets: int.tryParse(_setsController.text.trim()) ?? 0,
+                reps: int.tryParse(_repsController.text.trim()) ?? 0,
+                weight: double.tryParse(_weightController.text.trim()) ?? 0.0,
+                date: _selectedDate,
+              ),
+            ),
             UpdatePerfButton(
               latestData: () => PerformanceDetail(
                 id: widget.data?.id,
