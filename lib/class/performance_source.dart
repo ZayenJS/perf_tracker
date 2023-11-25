@@ -1,7 +1,7 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:perf_tracker/class/performance_detail.dart';
+import 'package:workout_performance_tracker/class/performance_detail.dart';
 
 class PerformanceSource extends DataTableSource {
   final List<PerformanceDetail> data;

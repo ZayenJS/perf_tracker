@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:perf_tracker/class/performance_detail.dart';
-import 'package:perf_tracker/models/model.dart';
-import 'package:perf_tracker/providers/exercise.dart';
-import 'package:perf_tracker/providers/performance.dart';
-import 'package:perf_tracker/utils/main.dart';
+import 'package:workout_performance_tracker/class/performance_detail.dart';
+import 'package:workout_performance_tracker/models/model.dart';
+import 'package:workout_performance_tracker/providers/exercise.dart';
+import 'package:workout_performance_tracker/providers/performance.dart';
+import 'package:workout_performance_tracker/utils/main.dart';
 
 class UpdatePerfButton extends ConsumerWidget {
   final PerformanceDetail Function() latestData;

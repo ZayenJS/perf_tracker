@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:perf_tracker/models/exercise.dart';
-import 'package:perf_tracker/models/performance.dart';
+import 'package:workout_performance_tracker/models/exercise.dart';
+import 'package:workout_performance_tracker/models/performance.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:sqfentity/sqfentity.dart';
@@ -14,7 +14,7 @@ const seqIdentity = SqfEntitySequence(
 
 @SqfEntityBuilder(dbModel)
 const dbModel = SqfEntityModel(
-  databaseName: 'perf_tracker.db',
+  databaseName: 'workout_performance_tracker.db',
   databaseTables: [
     exercisesTable,
     performancesTable,

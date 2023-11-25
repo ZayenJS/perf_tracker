@@ -1,3 +1,3 @@
-import 'package:perf_tracker/models/model.dart';
+import 'package:workout_performance_tracker/models/model.dart';
 
 final List<Exercise> exercisesData = [];

@@ -1,4 +1,4 @@
-# perf_tracker
+# workout_performance_tracker
 
 A new Flutter project.
 

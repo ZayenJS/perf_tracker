@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:perf_tracker/utils/main.dart';
+import 'package:workout_performance_tracker/utils/main.dart';
 
 class DeletePerfButton extends StatelessWidget {
   const DeletePerfButton({super.key});

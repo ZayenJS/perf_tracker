@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:perf_tracker/class/performance_detail.dart';
-import 'package:perf_tracker/models/model.dart';
-import 'package:perf_tracker/providers/exercise.dart';
-import 'package:perf_tracker/widgets/buttons/add_perf_button.dart';
-import 'package:perf_tracker/widgets/buttons/delete_perf_button.dart';
-import 'package:perf_tracker/widgets/buttons/reset_perf_button.dart';
-import 'package:perf_tracker/widgets/buttons/update_perf_button.dart';
-import 'package:perf_tracker/widgets/home/search_form/numeric_field.dart';
+import 'package:workout_performance_tracker/class/performance_detail.dart';
+import 'package:workout_performance_tracker/models/model.dart';
+import 'package:workout_performance_tracker/providers/exercise.dart';
+import 'package:workout_performance_tracker/widgets/buttons/add_perf_button.dart';
+import 'package:workout_performance_tracker/widgets/buttons/delete_perf_button.dart';
+import 'package:workout_performance_tracker/widgets/buttons/reset_perf_button.dart';
+import 'package:workout_performance_tracker/widgets/buttons/update_perf_button.dart';
+import 'package:workout_performance_tracker/widgets/home/search_form/numeric_field.dart';
 import 'package:searchfield/searchfield.dart';
 
 class PerfPopup extends ConsumerStatefulWidget {

@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:perf_tracker/class/performance_detail.dart';
-import 'package:perf_tracker/models/model.dart';
-import 'package:perf_tracker/utils/main.dart';
+import 'package:workout_performance_tracker/class/performance_detail.dart';
+import 'package:workout_performance_tracker/models/model.dart';
+import 'package:workout_performance_tracker/utils/main.dart';
 
 class AppFileSystem {
   static Future<File?> pickCSVFileToImport() async {
@@ -96,7 +96,7 @@ class AppFileSystem {
     }
 
     final finalFileName = fileName ??
-        "perf_tracker_export_${DateTime.now().millisecondsSinceEpoch}";
+        "workout_performance_tracker_export_${DateTime.now().millisecondsSinceEpoch}";
     final file = File("$selectedDirectory/$finalFileName.csv");
     final performances = await Performance().select().toList(preload: true);
     final data = performances

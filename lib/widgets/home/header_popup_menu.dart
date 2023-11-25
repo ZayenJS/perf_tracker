@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:perf_tracker/widgets/app_popup_menu_button.dart';
+import 'package:workout_performance_tracker/widgets/app_popup_menu_button.dart';
 
 class HeaderPopupMenu extends StatelessWidget {
   final void Function(ScaffoldMessengerState, ThemeData) importFile;
