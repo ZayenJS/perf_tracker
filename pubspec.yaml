@@ -42,6 +42,10 @@ dependencies:
   sqfentity: ^2.4.0
   sqfentity_gen:
   searchfield: ^0.8.7
+  data_table_2: ^2.5.9
+  csv: ^5.1.1
+  path_provider: ^2.1.1
+  file_picker: ^6.1.1
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to

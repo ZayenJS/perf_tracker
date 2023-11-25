@@ -50,6 +50,18 @@ class ExerciseNotifier extends StateNotifier<ExerciseState> {
 
     return exercise.id!;
   }
+
+  Future<Exercise?> getByName(String name) async {
+    final exercise = await Exercise()
+        .select()
+        .where(
+          'name = ?',
+          parameterValue: name,
+        )
+        .toSingle();
+
+    return exercise;
+  }
 }
 
 final exerciseProvider = StateNotifierProvider<ExerciseNotifier, ExerciseState>(

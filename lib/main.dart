@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:perf_tracker/data/data.dart';
 import 'package:perf_tracker/models/model.dart';
@@ -29,15 +30,22 @@ class App extends ConsumerStatefulWidget {
 class _AppState extends ConsumerState<App> {
   @override
   void initState() {
-    ref.read(exerciseProvider.notifier).load();
     super.initState();
+
+    ref.read(exerciseProvider.notifier).load();
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Workout Performance Tracker',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
             seedColor: Colors.deepPurple,
