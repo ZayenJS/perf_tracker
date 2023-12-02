@@ -18,6 +18,7 @@ const dbModel = SqfEntityModel(
   databaseTables: [
     exercisesTable,
     performancesTable,
+    // TODO: add settings table for user preferences
   ],
   sequences: [seqIdentity],
   bundledDatabasePath: null,

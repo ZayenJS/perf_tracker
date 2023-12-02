@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workout_performance_tracker/providers/exercise.dart';
-import 'package:workout_performance_tracker/screens/home.dart';
+import 'package:workout_performance_tracker/screens/tabs.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,7 +61,7 @@ class _AppState extends ConsumerState<App> {
             surfaceTintColor: Colors.white,
           ),
         ),
-        home: const HomeScreen(),
+        home: const TabsScreen(),
       ),
     );
   }

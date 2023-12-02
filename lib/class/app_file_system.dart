@@ -88,6 +88,7 @@ class AppFileSystem {
     ScaffoldMessengerState scaffoldMessenger,
     ThemeData theme, {
     String? fileName,
+    required String data,
     required selectedDirectory,
   }) async {
     if (selectedDirectory == null) {
@@ -98,19 +99,8 @@ class AppFileSystem {
     final finalFileName = fileName ??
         "workout_performance_tracker_export_${DateTime.now().millisecondsSinceEpoch}";
     final file = File("$selectedDirectory/$finalFileName.csv");
-    final performances = await Performance().select().toList(preload: true);
-    final data = performances
-        .map(
-            (e) => [e.plExercise!.name, e.sets, e.reps, e.weight, e.created_at])
-        .toList();
 
-    ListToCsvConverter converter = const ListToCsvConverter();
-    final csvData = converter.convert([
-      ["name", "sets", "reps", "weight", "created_at"],
-      ...data
-    ]);
-
-    await file.writeAsString(csvData);
+    await file.writeAsString(data);
 
     showSnackBar(
       scaffoldMessenger,

@@ -1,4 +1,6 @@
+import 'package:csv/csv.dart';
 import 'package:workout_performance_tracker/models/exercise.dart';
+import 'package:workout_performance_tracker/models/model.dart' as models;
 import 'package:workout_performance_tracker/models/timestamps.dart';
 import 'package:sqfentity_gen/sqfentity_gen.dart';
 
@@ -22,3 +24,22 @@ const performancesTable = SqfEntityTable(
     ...timestamps,
   ],
 );
+
+class Performance {
+  static Future<String> formatForCsv() async {
+    final performances =
+        await models.Performance().select().toList(preload: true);
+    final data = performances
+        .map(
+            (e) => [e.plExercise!.name, e.sets, e.reps, e.weight, e.created_at])
+        .toList();
+
+    ListToCsvConverter converter = const ListToCsvConverter();
+    final csvData = converter.convert([
+      ["name", "sets", "reps", "weight", "created_at"],
+      ...data
+    ]);
+
+    return csvData;
+  }
+}

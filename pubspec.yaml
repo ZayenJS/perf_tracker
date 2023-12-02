@@ -31,21 +31,26 @@ dependencies:
   flutter:
     sdk: flutter
   # Allows painting and displaying Scalable Vector Graphics 1.1 files.
-  flutter_svg: ^1.0.3
+  flutter_svg: ^2.0.9
   # Include fonts from fonts.google.com.
-  google_fonts: ^5.1.0
+  google_fonts: ^6.1.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   intl: ^0.18.1
-  flutter_riverpod: ^2.4.5
+  flutter_riverpod: ^2.4.9
   sqfentity: ^2.4.0
   sqfentity_gen:
-  searchfield: ^0.8.7
+  searchfield: ^0.8.9
   data_table_2: ^2.5.9
   csv: ^5.1.1
+  flutter_secure_storage: ^9.0.0
+  googleapis: ^12.0.0
+  googleapis_auth: ^1.4.1
   path_provider: ^2.1.1
   file_picker: ^6.1.1
+  google_sign_in: ^6.1.6
+  extension_google_sign_in_as_googleapis_auth: ^2.0.11
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -53,8 +58,8 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
-  build_runner:
+  flutter_lints: ^3.0.1
+  build_runner: ^2.4.7
   build_verify:
 
 # For information on the generic Dart part of this file, see the
@@ -68,8 +73,9 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  # - assets/
+  assets:
+    - assets/
+    - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
