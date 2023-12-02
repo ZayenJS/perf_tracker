@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:workout_performance_tracker/data/data.dart';
-import 'package:workout_performance_tracker/models/model.dart';
 import 'package:workout_performance_tracker/providers/exercise.dart';
 import 'package:workout_performance_tracker/screens/home.dart';
 
