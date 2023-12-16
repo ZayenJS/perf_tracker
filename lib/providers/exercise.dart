@@ -34,6 +34,10 @@ class ExerciseNotifier extends StateNotifier<ExerciseState> {
     if (id != null) {
       exercise.id = id;
 
+      state = ExerciseState(
+        exercises: [...state.exercises, exercise],
+      );
+
       return exercise;
     }
 
@@ -61,6 +65,19 @@ class ExerciseNotifier extends StateNotifier<ExerciseState> {
         .toSingle();
 
     return exercise;
+  }
+
+  Future deleteExercise(int id) async {
+    final result = await Exercise().select().id.equals(id).delete(true);
+
+    if (result.success) {
+      final updatedExercises = [...state.exercises];
+      updatedExercises.removeWhere((e) => e.id == id);
+
+      state = ExerciseState(
+        exercises: updatedExercises,
+      );
+    }
   }
 }
 

@@ -14,7 +14,7 @@ import 'package:searchfield/searchfield.dart';
 class PerfPopup extends ConsumerStatefulWidget {
   final PerformanceDetail? data;
 
-  const PerfPopup({Key? key, this.data}) : super(key: key);
+  const PerfPopup({super.key, this.data});
 
   @override
   ConsumerState<PerfPopup> createState() => _PerfPopupState();

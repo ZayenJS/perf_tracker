@@ -10,6 +10,13 @@ class SearchState {
 
 class SearchNotifier extends StateNotifier<SearchState> {
   SearchNotifier() : super(SearchState());
+
+  void reset() {
+    state.exerciseNameController.clear();
+    state.setsController.clear();
+    state.repsController.clear();
+    state.weightController.clear();
+  }
 }
 
 final searchProvider = StateNotifierProvider<SearchNotifier, SearchState>(

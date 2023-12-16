@@ -62,6 +62,8 @@ class UpdatePerfButton extends ConsumerWidget {
               await performanceNotifier.updatePerf(performance);
               ref.read(exerciseProvider.notifier).load();
 
+              printDebug("updatePerfButton", after: '*');
+
               navigator.pop(
                 PerfPopupReturn(
                   data: PerformanceDetail(

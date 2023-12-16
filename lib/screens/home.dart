@@ -17,87 +17,30 @@ import 'package:workout_performance_tracker/widgets/perf_popup.dart';
 import 'package:workout_performance_tracker/widgets/loading_backdrop.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key});
+  final HomeParams params;
+  final void Function() clearResults;
+  final void Function(List<PerformanceDetail> results) updateSearchResults;
+
+  const HomeScreen({
+    super.key,
+    required this.params,
+    required this.clearResults,
+    required this.updateSearchResults,
+  });
 
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  final List<PerformanceDetail> _results = [];
-
-  late PerformanceSource _data;
-  int _sortColumnIndex = 3;
-  bool _sortAscending = false;
-
   @override
   void initState() {
     super.initState();
-    _updateTableData();
-  }
-
-  void _onRowTap(PerformanceDetail data) async {
-    final result = await showDialog<PerfPopupReturn>(
-      context: context,
-      builder: (BuildContext context) {
-        return PerfPopup(data: data);
-      },
-    );
-
-    if (result == null) {
-      return;
-    }
-
-    final perf = result.data;
-
-    if (perf == null) {
-      return;
-    }
-
-    final resultTableNotifier = ref.read(resultTableProvider.notifier);
-
-    resultTableNotifier.updateResults(perf, result.deleted);
-    resultTableNotifier.onTableSort();
-  }
-
-  void _updateTableData() {
-    _data = PerformanceSource(data: _results, onTap: _onRowTap);
-  }
-
-  void _onSort(int columnIndex, bool ascending) {
-    setState(() {
-      _sortColumnIndex = columnIndex;
-      _sortAscending = ascending;
-
-      if (columnIndex == 3) {
-        _data.sortDate(
-          (PerformanceDetail p) => p.date,
-          ascending,
-        );
-      } else {
-        _data.sortNumeric<num>(
-          (PerformanceDetail p) {
-            switch (columnIndex) {
-              case 0:
-                return p.sets;
-              case 1:
-                return p.reps;
-              case 2:
-                return p.weight;
-              default:
-                return p.sets;
-            }
-          },
-          ascending,
-        );
-      }
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     final homeNotifier = ref.watch(homeProvider.notifier);
-    final resultTableState = ref.watch(resultTableProvider);
 
     final searchState = ref.watch(searchProvider);
     final exerciseNameController = searchState.exerciseNameController;
@@ -161,10 +104,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   const SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () async {
-                      _results.clear();
+                      widget.clearResults();
 
                       homeNotifier.setLoading(true);
-                      resultTableState.results.clear();
 
                       scaffoldMessenger.hideCurrentSnackBar();
                       final exerciseName = exerciseNameController.text.trim();
@@ -221,15 +163,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                       setState(() {
                         homeNotifier.setLoading(false);
-                        _results.addAll(
+                        widget.updateSearchResults(
                           PerformanceDetail.forExercise(
                             exercise.name!,
                             performances,
                           ),
                         );
-                        _updateTableData();
-                        _sortAscending = false;
-                        _sortColumnIndex = 3;
                       });
                     },
                     style: ElevatedButton.styleFrom(
@@ -240,13 +179,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   const SizedBox(height: 16.0),
                   if (homeState.isLoading) const CircularProgressIndicator(),
-                  if (_results.isNotEmpty)
+                  if (widget.params.results.isNotEmpty)
                     SearchResults(
-                      results: _results,
-                      sortAscending: _sortAscending,
-                      sortColumnIndex: _sortColumnIndex,
-                      onRowTap: _onRowTap,
-                      onSort: _onSort,
+                      results: widget.params.results,
+                      sortAscending: widget.params.sortAscending,
+                      sortColumnIndex: widget.params.sortColumnIndex,
+                      onRowTap: widget.params.onRowTap,
+                      onSort: widget.params.onSort,
                     ),
                 ],
               ),
@@ -257,4 +196,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
     );
   }
+}
+
+class HomeParams {
+  final List<PerformanceDetail> results;
+  final bool sortAscending;
+  final int sortColumnIndex;
+  final void Function(PerformanceDetail data) onRowTap;
+  final void Function(int columnIndex, bool ascending) onSort;
+
+  const HomeParams({
+    required this.results,
+    required this.sortAscending,
+    required this.sortColumnIndex,
+    required this.onRowTap,
+    required this.onSort,
+  });
 }

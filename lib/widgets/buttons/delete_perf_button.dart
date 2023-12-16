@@ -4,6 +4,7 @@ import 'package:workout_performance_tracker/class/google.dart';
 import 'package:workout_performance_tracker/class/perf_popup_return.dart';
 import 'package:workout_performance_tracker/class/performance_detail.dart';
 import 'package:workout_performance_tracker/providers/performance.dart';
+import 'package:workout_performance_tracker/providers/settings.dart';
 import 'package:workout_performance_tracker/utils/main.dart';
 
 class DeletePerfButton extends ConsumerWidget {
@@ -24,6 +25,33 @@ class DeletePerfButton extends ConsumerWidget {
         backgroundColor: theme.colorScheme.error,
       ),
       onPressed: () async {
+        final confirmDelete = await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            surfaceTintColor: Colors.white,
+            title: const Text('Delete performance'),
+            content: const Text(
+              'Are you sure?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  navigator.pop(false);
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  navigator.pop(true);
+                },
+                child: const Text('Delete'),
+              ),
+            ],
+          ),
+        );
+
+        if (!confirmDelete) return;
+
         final data = latestData();
 
         if (data.id == null) {
@@ -46,6 +74,12 @@ class DeletePerfButton extends ConsumerWidget {
             theme,
             "Performance successfully deleted",
           );
+
+          final isBackupEnabled = ref.read(settingsProvider).autoBackup;
+
+          if (!isBackupEnabled) {
+            return;
+          }
 
           Google.driveBackupPerformances();
         } else {

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sign_in_as_googleapis_auth.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v3.dart' as ga;
 import 'package:googleapis_auth/googleapis_auth.dart';
@@ -38,7 +39,8 @@ class Google {
 
       return googleUser;
     } catch (error) {
-      print('Error logging in with Google: $error');
+      if (kDebugMode) {}
+      printDebug('Error logging in with Google: $error');
     }
   }
 
@@ -50,7 +52,7 @@ class Google {
 
       await _googleSignIn.disconnect();
     } catch (error) {
-      print('Error logging out with Google: $error');
+      printDebug('Error logging out with Google: $error');
     }
   }
 
@@ -58,6 +60,7 @@ class Google {
     final data = await AppPerformance.formatForCsv();
 
     await driveBackup(data);
+    printDebug('Backup to Google Drive completed');
   }
 
   static Future driveBackup(String data) async {

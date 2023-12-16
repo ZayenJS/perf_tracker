@@ -39,7 +39,7 @@ class AppPerformance {
       ["name", "sets", "reps", "weight", "created_at"],
       ...data
     ]);
-    print(csvData);
+
     return csvData;
   }
 }

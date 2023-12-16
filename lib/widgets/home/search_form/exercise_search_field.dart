@@ -16,6 +16,20 @@ class ExerciseSearchField extends StatelessWidget {
   Widget build(BuildContext context) {
     return SearchField<Exercise>(
       controller: controller,
+      inputType: TextInputType.text,
+      scrollbarDecoration: ScrollbarDecoration(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        thumbColor: Theme.of(context).primaryColor,
+      ),
+      suggestionsDecoration: SuggestionDecoration(
+        border: Border.all(
+          color: Theme.of(context).primaryColor.withOpacity(0.5),
+        ),
+        borderRadius:
+            const BorderRadius.vertical(bottom: Radius.circular(10.0)),
+      ),
       searchInputDecoration: const InputDecoration(
         label: Text("Exercise"),
       ),

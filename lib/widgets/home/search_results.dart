@@ -23,7 +23,7 @@ class SearchResults extends StatelessWidget {
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints:
-          BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.525),
+          BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.46),
       child: PaginatedDataTable2(
         sortAscending: sortAscending,
         sortColumnIndex: sortColumnIndex,

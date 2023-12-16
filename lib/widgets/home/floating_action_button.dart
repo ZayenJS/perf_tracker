@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:workout_performance_tracker/class/perf_popup_return.dart';
+import 'package:workout_performance_tracker/class/performance_detail.dart';
+import 'package:workout_performance_tracker/utils/main.dart';
 import 'package:workout_performance_tracker/widgets/perf_popup.dart';
 
 class HomeFloatingActionButton extends StatelessWidget {
-  const HomeFloatingActionButton({super.key});
+  final void Function(PerformanceDetail perf) updateSearchResults;
+
+  const HomeFloatingActionButton({
+    super.key,
+    required this.updateSearchResults,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +38,7 @@ class HomeFloatingActionButton extends StatelessWidget {
           return;
         }
 
-        // setState(() {
-        //   _results.add(newPerf);
-        //   _updateTableData();
-        //   _onSort(_sortColumnIndex, _sortAscending);
-        // });
+        updateSearchResults(newPerf);
       },
     );
   }
