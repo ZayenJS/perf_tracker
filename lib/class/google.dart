@@ -7,6 +7,7 @@ import 'package:googleapis/drive/v3.dart' as ga;
 import 'package:googleapis_auth/googleapis_auth.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:workout_performance_tracker/models/performance.dart';
 import 'package:workout_performance_tracker/utils/main.dart';
 
 const _scopes = [
@@ -24,11 +25,16 @@ class Google {
     return _googleSignIn.authenticatedClient();
   }
 
-  static Future<GoogleSignInAccount?> getLoggedUser() async {
+  static Future<GoogleSignInAccount?> getLoggedUser({
+    bool silentlyOnly = false,
+  }) async {
     try {
-      GoogleSignInAccount? googleUser = await getSignedInAccount() ??
-          await _googleSignIn.signInSilently() ??
-          await _googleSignIn.signIn();
+      GoogleSignInAccount? googleUser =
+          await getSignedInAccount() ?? await _googleSignIn.signInSilently();
+
+      if (googleUser == null && !silentlyOnly) {
+        googleUser = await _googleSignIn.signIn();
+      }
 
       return googleUser;
     } catch (error) {
@@ -48,7 +54,13 @@ class Google {
     }
   }
 
-  static void driveBackup(String data) async {
+  static Future driveBackupPerformances() async {
+    final data = await AppPerformance.formatForCsv();
+
+    await driveBackup(data);
+  }
+
+  static Future driveBackup(String data) async {
     var client = await getAuthenticatedClient();
 
     if (client == null) {

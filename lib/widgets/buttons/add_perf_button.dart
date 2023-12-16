@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:workout_performance_tracker/class/google.dart';
 import 'package:workout_performance_tracker/class/perf_popup_return.dart';
 import 'package:workout_performance_tracker/class/performance_detail.dart';
 import 'package:workout_performance_tracker/models/model.dart';
+import 'package:workout_performance_tracker/models/performance.dart';
 import 'package:workout_performance_tracker/providers/exercise.dart';
 import 'package:workout_performance_tracker/providers/performance.dart';
+import 'package:workout_performance_tracker/providers/settings.dart';
 import 'package:workout_performance_tracker/utils/main.dart';
 
 class AddPerfButton extends ConsumerWidget {
@@ -25,6 +28,8 @@ class AddPerfButton extends ConsumerWidget {
 
     final exerciseNotifier = ref.read(exerciseProvider.notifier);
     final performanceNotifier = ref.read(performanceProvider.notifier);
+
+    final settings = ref.read(settingsProvider);
 
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
@@ -73,6 +78,13 @@ class AddPerfButton extends ConsumerWidget {
                 theme,
                 "Performance added",
               );
+
+              if (!settings.autoBackup) {
+                return;
+              }
+
+              final csvData = await AppPerformance.formatForCsv();
+              Google.driveBackup(csvData);
             } catch (e) {
               if (e is String) {
                 showSnackBar(

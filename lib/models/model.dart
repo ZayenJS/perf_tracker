@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:sqfentity/sqfentity.dart';
 import 'package:sqfentity_gen/sqfentity_gen.dart';
+import 'package:workout_performance_tracker/models/settings.dart';
 
 part 'model.g.dart';
 
@@ -18,7 +19,7 @@ const dbModel = SqfEntityModel(
   databaseTables: [
     exercisesTable,
     performancesTable,
-    // TODO: add settings table for user preferences
+    settingsTable,
   ],
   sequences: [seqIdentity],
   bundledDatabasePath: null,

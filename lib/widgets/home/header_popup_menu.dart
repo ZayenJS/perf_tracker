@@ -6,6 +6,7 @@ import 'package:workout_performance_tracker/class/google.dart';
 import 'package:workout_performance_tracker/models/performance.dart';
 import 'package:workout_performance_tracker/providers/exercise.dart';
 import 'package:workout_performance_tracker/providers/home.dart';
+import 'package:workout_performance_tracker/providers/settings.dart';
 import 'package:workout_performance_tracker/providers/user.dart';
 import 'package:workout_performance_tracker/utils/main.dart';
 import 'package:workout_performance_tracker/widgets/app_popup_menu_button.dart';
@@ -80,7 +81,7 @@ class HeaderPopupMenu extends ConsumerWidget {
       // wait at least 500ms to show the loading backdrop
       await Future.delayed(const Duration(milliseconds: 500));
 
-      final data = await Performance.formatForCsv();
+      final data = await AppPerformance.formatForCsv();
 
       await AppFileSystem.export(
         scaffoldMessenger,
@@ -90,7 +91,7 @@ class HeaderPopupMenu extends ConsumerWidget {
         data: data,
       );
 
-      final isBackupEnabled = ref.read(userProvider).automaticBackup;
+      final isBackupEnabled = ref.read(settingsProvider).autoBackup;
 
       if (!isBackupEnabled) {
         return;

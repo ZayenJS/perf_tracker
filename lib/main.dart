@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workout_performance_tracker/providers/exercise.dart';
+import 'package:workout_performance_tracker/providers/settings.dart';
 import 'package:workout_performance_tracker/screens/tabs.dart';
 
 void main() async {
@@ -19,7 +20,7 @@ void main() async {
 }
 
 class App extends ConsumerStatefulWidget {
-  const App({Key? key}) : super(key: key);
+  const App({super.key});
 
   @override
   ConsumerState<App> createState() => _AppState();
@@ -31,6 +32,7 @@ class _AppState extends ConsumerState<App> {
     super.initState();
 
     ref.read(exerciseProvider.notifier).load();
+    ref.read(settingsProvider.notifier).load();
 
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,

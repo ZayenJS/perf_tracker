@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workout_performance_tracker/class/google.dart';
 import 'package:workout_performance_tracker/models/performance.dart';
 import 'package:workout_performance_tracker/providers/home.dart';
+import 'package:workout_performance_tracker/providers/settings.dart';
 import 'package:workout_performance_tracker/providers/user.dart';
 import 'package:workout_performance_tracker/screens/home.dart';
 import 'package:workout_performance_tracker/screens/settings.dart';
@@ -19,7 +20,6 @@ class TabsScreen extends ConsumerStatefulWidget {
 class _TabsScreenState extends ConsumerState<TabsScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
-  int _activeScreen = 0;
 
   @override
   void initState() {
@@ -31,20 +31,21 @@ class _TabsScreenState extends ConsumerState<TabsScreen>
       vsync: this,
     );
 
-    ref.read(userProvider.notifier).getCurrentUser().then((user) async {
+    ref
+        .read(userProvider.notifier)
+        .getCurrentUser(silentlyOnly: true)
+        .then((user) async {
       if (user == null) {
         return;
       }
 
-      final data = await Performance.formatForCsv();
-
-      final isBackupEnabled = ref.read(userProvider).automaticBackup;
+      final isBackupEnabled = ref.read(settingsProvider).autoBackup;
 
       if (!isBackupEnabled) {
         return;
       }
 
-      Google.driveBackup(data);
+      Google.driveBackupPerformances();
     });
   }
 

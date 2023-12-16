@@ -17,7 +17,7 @@ import 'package:workout_performance_tracker/widgets/perf_popup.dart';
 import 'package:workout_performance_tracker/widgets/loading_backdrop.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
@@ -96,6 +96,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final homeNotifier = ref.watch(homeProvider.notifier);
+    final resultTableState = ref.watch(resultTableProvider);
+
     final searchState = ref.watch(searchProvider);
     final exerciseNameController = searchState.exerciseNameController;
     final setsController = searchState.setsController;
@@ -158,8 +161,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   const SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () async {
-                      final homeNotifier = ref.watch(homeProvider.notifier);
-                      final resultTableState = ref.watch(resultTableProvider);
+                      _results.clear();
 
                       homeNotifier.setLoading(true);
                       resultTableState.results.clear();

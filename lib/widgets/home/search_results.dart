@@ -11,13 +11,13 @@ class SearchResults extends StatelessWidget {
   final void Function(int columnIndex, bool ascending) onSort;
 
   const SearchResults({
-    Key? key,
+    super.key,
     required this.results,
     required this.sortAscending,
     required this.sortColumnIndex,
     required this.onRowTap,
     required this.onSort,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

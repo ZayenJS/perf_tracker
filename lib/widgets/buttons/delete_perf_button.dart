@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:workout_performance_tracker/class/google.dart';
 import 'package:workout_performance_tracker/class/perf_popup_return.dart';
 import 'package:workout_performance_tracker/class/performance_detail.dart';
 import 'package:workout_performance_tracker/providers/performance.dart';
@@ -24,6 +25,7 @@ class DeletePerfButton extends ConsumerWidget {
       ),
       onPressed: () async {
         final data = latestData();
+
         if (data.id == null) {
           showSnackBar(
             scaffoldMessenger,
@@ -44,6 +46,8 @@ class DeletePerfButton extends ConsumerWidget {
             theme,
             "Performance successfully deleted",
           );
+
+          Google.driveBackupPerformances();
         } else {
           showSnackBar(
             scaffoldMessenger,

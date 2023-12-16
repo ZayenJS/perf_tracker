@@ -25,7 +25,7 @@ const performancesTable = SqfEntityTable(
   ],
 );
 
-class Performance {
+class AppPerformance {
   static Future<String> formatForCsv() async {
     final performances =
         await models.Performance().select().toList(preload: true);
@@ -39,7 +39,7 @@ class Performance {
       ["name", "sets", "reps", "weight", "created_at"],
       ...data
     ]);
-
+    print(csvData);
     return csvData;
   }
 }

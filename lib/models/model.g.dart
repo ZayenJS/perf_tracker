@@ -79,6 +79,32 @@ class TablePerformance extends SqfEntityTableBase {
     return _instance = _instance ?? TablePerformance();
   }
 }
+
+// Setting TABLE
+class TableSetting extends SqfEntityTableBase {
+  TableSetting() {
+    // declare properties of EntityTable
+    tableName = 'settings';
+    primaryKeyName = 'id';
+    primaryKeyType = PrimaryKeyType.integer_auto_incremental;
+    useSoftDeleting = false;
+    // when useSoftDeleting is true, creates a field named 'isDeleted' on the table, and set to '1' this field when item deleted (does not hard delete)
+
+    // declare fields
+    fields = [
+      SqfEntityFieldBase('auto_backup', DbType.bool, defaultValue: false),
+      SqfEntityFieldBase('created_at', DbType.datetime,
+          isNotNull: true, minValue: DateTime.parse('1900-01-01')),
+      SqfEntityFieldBase('updated_at', DbType.datetime,
+          minValue: DateTime.parse('1900-01-01')),
+    ];
+    super.init();
+  }
+  static SqfEntityTableBase? _instance;
+  static SqfEntityTableBase get getInstance {
+    return _instance = _instance ?? TableSetting();
+  }
+}
 // END TABLES
 
 // BEGIN SEQUENCES
@@ -112,6 +138,7 @@ class DbModel extends SqfEntityModelProvider {
     databaseTables = [
       TableExercise.getInstance,
       TablePerformance.getInstance,
+      TableSetting.getInstance,
     ];
 
     sequences = [
@@ -2080,6 +2107,863 @@ class PerformanceManager extends SqfEntityProvider {
 }
 
 //endregion PerformanceManager
+// region Setting
+class Setting extends TableBase {
+  Setting({this.id, this.auto_backup, this.created_at, this.updated_at}) {
+    _setDefaultValues();
+    softDeleteActivated = false;
+  }
+  Setting.withFields(this.auto_backup, this.created_at, this.updated_at) {
+    _setDefaultValues();
+  }
+  Setting.withId(this.id, this.auto_backup, this.created_at, this.updated_at) {
+    _setDefaultValues();
+  }
+  // fromMap v2.0
+  Setting.fromMap(Map<String, dynamic> o, {bool setDefaultValues = true}) {
+    if (setDefaultValues) {
+      _setDefaultValues();
+    }
+    id = int.tryParse(o['id'].toString());
+    if (o['auto_backup'] != null) {
+      auto_backup = o['auto_backup'].toString() == '1' ||
+          o['auto_backup'].toString() == 'true';
+    }
+    if (o['created_at'] != null) {
+      created_at = int.tryParse(o['created_at'].toString()) != null
+          ? DateTime.fromMillisecondsSinceEpoch(
+              int.tryParse(o['created_at'].toString())!)
+          : DateTime.tryParse(o['created_at'].toString());
+    }
+    if (o['updated_at'] != null) {
+      updated_at = int.tryParse(o['updated_at'].toString()) != null
+          ? DateTime.fromMillisecondsSinceEpoch(
+              int.tryParse(o['updated_at'].toString())!)
+          : DateTime.tryParse(o['updated_at'].toString());
+    }
+  }
+  // FIELDS (Setting)
+  int? id;
+  bool? auto_backup;
+  DateTime? created_at;
+  DateTime? updated_at;
+
+  // end FIELDS (Setting)
+
+  static const bool _softDeleteActivated = false;
+  SettingManager? __mnSetting;
+
+  SettingManager get _mnSetting {
+    return __mnSetting = __mnSetting ?? SettingManager();
+  }
+
+  // METHODS
+  @override
+  Map<String, dynamic> toMap(
+      {bool forQuery = false, bool forJson = false, bool forView = false}) {
+    final map = <String, dynamic>{};
+    map['id'] = id;
+    if (auto_backup != null) {
+      map['auto_backup'] = forQuery ? (auto_backup! ? 1 : 0) : auto_backup;
+    } else if (auto_backup != null || !forView) {
+      map['auto_backup'] = null;
+    }
+    if (created_at != null) {
+      map['created_at'] = forJson
+          ? created_at!.toString()
+          : forQuery
+              ? created_at!.millisecondsSinceEpoch
+              : created_at;
+    } else if (created_at != null || !forView) {
+      map['created_at'] = null;
+    }
+    if (updated_at != null) {
+      map['updated_at'] = forJson
+          ? updated_at!.toString()
+          : forQuery
+              ? updated_at!.millisecondsSinceEpoch
+              : updated_at;
+    } else if (updated_at != null || !forView) {
+      map['updated_at'] = null;
+    }
+
+    return map;
+  }
+
+  @override
+  Future<Map<String, dynamic>> toMapWithChildren(
+      [bool forQuery = false,
+      bool forJson = false,
+      bool forView = false]) async {
+    final map = <String, dynamic>{};
+    map['id'] = id;
+    if (auto_backup != null) {
+      map['auto_backup'] = forQuery ? (auto_backup! ? 1 : 0) : auto_backup;
+    } else if (auto_backup != null || !forView) {
+      map['auto_backup'] = null;
+    }
+    if (created_at != null) {
+      map['created_at'] = forJson
+          ? created_at!.toString()
+          : forQuery
+              ? created_at!.millisecondsSinceEpoch
+              : created_at;
+    } else if (created_at != null || !forView) {
+      map['created_at'] = null;
+    }
+    if (updated_at != null) {
+      map['updated_at'] = forJson
+          ? updated_at!.toString()
+          : forQuery
+              ? updated_at!.millisecondsSinceEpoch
+              : updated_at;
+    } else if (updated_at != null || !forView) {
+      map['updated_at'] = null;
+    }
+
+    return map;
+  }
+
+  /// This method returns Json String [Setting]
+  @override
+  String toJson() {
+    return json.encode(toMap(forJson: true));
+  }
+
+  /// This method returns Json String [Setting]
+  @override
+  Future<String> toJsonWithChilds() async {
+    return json.encode(await toMapWithChildren(false, true));
+  }
+
+  @override
+  List<dynamic> toArgs() {
+    return [
+      auto_backup,
+      created_at != null ? created_at!.millisecondsSinceEpoch : null,
+      updated_at != null ? updated_at!.millisecondsSinceEpoch : null
+    ];
+  }
+
+  @override
+  List<dynamic> toArgsWithIds() {
+    return [
+      id,
+      auto_backup,
+      created_at != null ? created_at!.millisecondsSinceEpoch : null,
+      updated_at != null ? updated_at!.millisecondsSinceEpoch : null
+    ];
+  }
+
+  static Future<List<Setting>?> fromWebUrl(Uri uri,
+      {Map<String, String>? headers}) async {
+    try {
+      final response = await http.get(uri, headers: headers);
+      return await fromJson(response.body);
+    } catch (e) {
+      debugPrint(
+          'SQFENTITY ERROR Setting.fromWebUrl: ErrorMessage: ${e.toString()}');
+      return null;
+    }
+  }
+
+  Future<http.Response> postUrl(Uri uri, {Map<String, String>? headers}) {
+    return http.post(uri, headers: headers, body: toJson());
+  }
+
+  static Future<List<Setting>> fromJson(String jsonBody) async {
+    final Iterable list = await json.decode(jsonBody) as Iterable;
+    var objList = <Setting>[];
+    try {
+      objList = list
+          .map((setting) => Setting.fromMap(setting as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      debugPrint(
+          'SQFENTITY ERROR Setting.fromJson: ErrorMessage: ${e.toString()}');
+    }
+    return objList;
+  }
+
+  static Future<List<Setting>> fromMapList(List<dynamic> data,
+      {bool preload = false,
+      List<String>? preloadFields,
+      bool loadParents = false,
+      List<String>? loadedFields,
+      bool setDefaultValues = true}) async {
+    final List<Setting> objList = <Setting>[];
+    loadedFields = loadedFields ?? [];
+    for (final map in data) {
+      final obj = Setting.fromMap(map as Map<String, dynamic>,
+          setDefaultValues: setDefaultValues);
+
+      objList.add(obj);
+    }
+    return objList;
+  }
+
+  /// returns Setting by ID if exist, otherwise returns null
+  /// Primary Keys: int? id
+  /// bool preload: if true, loads all related child objects (Set preload to true if you want to load all fields related to child or parent)
+  /// ex: getById(preload:true) -> Loads all related objects
+  /// List<String> preloadFields: specify the fields you want to preload (preload parameter's value should also be "true")
+  /// ex: getById(preload:true, preloadFields:['plField1','plField2'... etc])  -> Loads only certain fields what you specified
+  /// bool loadParents: if true, loads all parent objects until the object has no parent
+
+  /// <returns>returns [Setting] if exist, otherwise returns null
+  Future<Setting?> getById(int? id,
+      {bool preload = false,
+      List<String>? preloadFields,
+      bool loadParents = false,
+      List<String>? loadedFields}) async {
+    if (id == null) {
+      return null;
+    }
+    Setting? obj;
+    final data = await _mnSetting.getById([id]);
+    if (data.length != 0) {
+      obj = Setting.fromMap(data[0] as Map<String, dynamic>);
+    } else {
+      obj = null;
+    }
+    return obj;
+  }
+
+  /// Saves the (Setting) object. If the id field is null, saves as a new record and returns new id, if id is not null then updates record
+  /// ignoreBatch = true as a default. Set ignoreBatch to false if you run more than one save() operation those are between batchStart and batchCommit
+  /// <returns>Returns id
+  @override
+  Future<int?> save({bool ignoreBatch = true}) async {
+    if (id == null || id == 0) {
+      id = await _mnSetting.insert(this, ignoreBatch);
+    } else {
+      await _mnSetting.update(this);
+    }
+
+    return id;
+  }
+
+  /// Saves the (Setting) object. If the id field is null, saves as a new record and returns new id, if id is not null then updates record
+  /// ignoreBatch = true as a default. Set ignoreBatch to false if you run more than one save() operation those are between batchStart and batchCommit
+  /// <returns>Returns id
+  @override
+  Future<int?> saveOrThrow({bool ignoreBatch = true}) async {
+    if (id == null || id == 0) {
+      id = await _mnSetting.insertOrThrow(this, ignoreBatch);
+
+      isInsert = true;
+    } else {
+      // id= await _upsert(); // removed in sqfentity_gen 1.3.0+6
+      await _mnSetting.updateOrThrow(this);
+    }
+
+    return id;
+  }
+
+  /// saveAs Setting. Returns a new Primary Key value of Setting
+
+  /// <returns>Returns a new Primary Key value of Setting
+  @override
+  Future<int?> saveAs({bool ignoreBatch = true}) async {
+    id = null;
+
+    return save(ignoreBatch: ignoreBatch);
+  }
+
+  /// saveAll method saves the sent List<Setting> as a bulk in one transaction
+  /// Returns a <List<BoolResult>>
+  static Future<List<dynamic>> saveAll(List<Setting> settings,
+      {bool? exclusive, bool? noResult, bool? continueOnError}) async {
+    List<dynamic>? result = [];
+    // If there is no open transaction, start one
+    final isStartedBatch = await DbModel().batchStart();
+    for (final obj in settings) {
+      await obj.save(ignoreBatch: false);
+    }
+    if (!isStartedBatch) {
+      result = await DbModel().batchCommit(
+          exclusive: exclusive,
+          noResult: noResult,
+          continueOnError: continueOnError);
+      for (int i = 0; i < settings.length; i++) {
+        if (settings[i].id == null) {
+          settings[i].id = result![i] as int;
+        }
+      }
+    }
+    return result!;
+  }
+
+  /// Updates if the record exists, otherwise adds a new row
+  /// <returns>Returns id
+  @override
+  Future<int?> upsert({bool ignoreBatch = true}) async {
+    try {
+      final result = await _mnSetting.rawInsert(
+          'INSERT OR REPLACE INTO settings (id, auto_backup, created_at, updated_at)  VALUES (?,?,?,?)',
+          [
+            id,
+            auto_backup,
+            created_at != null ? created_at!.millisecondsSinceEpoch : null,
+            updated_at != null ? updated_at!.millisecondsSinceEpoch : null
+          ],
+          ignoreBatch);
+      if (result! > 0) {
+        saveResult = BoolResult(
+            success: true,
+            successMessage: 'Setting id=$id updated successfully');
+      } else {
+        saveResult = BoolResult(
+            success: false, errorMessage: 'Setting id=$id did not update');
+      }
+      return id;
+    } catch (e) {
+      saveResult = BoolResult(
+          success: false,
+          errorMessage: 'Setting Save failed. Error: ${e.toString()}');
+      return null;
+    }
+  }
+
+  /// inserts or replaces the sent List<<Setting>> as a bulk in one transaction.
+  /// upsertAll() method is faster then saveAll() method. upsertAll() should be used when you are sure that the primary key is greater than zero
+  /// Returns a BoolCommitResult
+  @override
+  Future<BoolCommitResult> upsertAll(List<Setting> settings,
+      {bool? exclusive, bool? noResult, bool? continueOnError}) async {
+    final results = await _mnSetting.rawInsertAll(
+        'INSERT OR REPLACE INTO settings (id, auto_backup, created_at, updated_at)  VALUES (?,?,?,?)',
+        settings,
+        exclusive: exclusive,
+        noResult: noResult,
+        continueOnError: continueOnError);
+    return results;
+  }
+
+  /// Deletes Setting
+
+  /// <returns>BoolResult res.success= true (Deleted), false (Could not be deleted)
+  @override
+  Future<BoolResult> delete([bool hardDelete = false]) async {
+    debugPrint('SQFENTITIY: delete Setting invoked (id=$id)');
+    if (!_softDeleteActivated || hardDelete) {
+      return _mnSetting
+          .delete(QueryParams(whereString: 'id=?', whereArguments: [id]));
+    } else {
+      return _mnSetting.updateBatch(
+          QueryParams(whereString: 'id=?', whereArguments: [id]),
+          {'isDeleted': 1});
+    }
+  }
+
+  @override
+  Future<BoolResult> recover([bool recoverChilds = true]) {
+    // not implemented because:
+    final msg =
+        'set useSoftDeleting:true in the table definition of [Setting] to use this feature';
+    throw UnimplementedError(msg);
+  }
+
+  @override
+  SettingFilterBuilder select(
+      {List<String>? columnsToSelect, bool? getIsDeleted}) {
+    return SettingFilterBuilder(this, getIsDeleted)
+      ..qparams.selectColumns = columnsToSelect;
+  }
+
+  @override
+  SettingFilterBuilder distinct(
+      {List<String>? columnsToSelect, bool? getIsDeleted}) {
+    return SettingFilterBuilder(this, getIsDeleted)
+      ..qparams.selectColumns = columnsToSelect
+      ..qparams.distinct = true;
+  }
+
+  void _setDefaultValues() {
+    auto_backup = auto_backup ?? false;
+  }
+
+  @override
+  void rollbackPk() {
+    if (isInsert == true) {
+      id = null;
+    }
+  }
+
+  // END METHODS
+  // BEGIN CUSTOM CODE
+  /*
+      you can define customCode property of your SqfEntityTable constant. For example:
+      const tablePerson = SqfEntityTable(
+      tableName: 'person',
+      primaryKeyName: 'id',
+      primaryKeyType: PrimaryKeyType.integer_auto_incremental,
+      fields: [
+        SqfEntityField('firstName', DbType.text),
+        SqfEntityField('lastName', DbType.text),
+      ],
+      customCode: '''
+       String fullName()
+       { 
+         return '$firstName $lastName';
+       }
+      ''');
+     */
+  // END CUSTOM CODE
+}
+// endregion setting
+
+// region SettingField
+class SettingField extends FilterBase {
+  SettingField(SettingFilterBuilder settingFB) : super(settingFB);
+
+  @override
+  SettingFilterBuilder equals(dynamic pValue) {
+    return super.equals(pValue) as SettingFilterBuilder;
+  }
+
+  @override
+  SettingFilterBuilder equalsOrNull(dynamic pValue) {
+    return super.equalsOrNull(pValue) as SettingFilterBuilder;
+  }
+
+  @override
+  SettingFilterBuilder isNull() {
+    return super.isNull() as SettingFilterBuilder;
+  }
+
+  @override
+  SettingFilterBuilder contains(dynamic pValue) {
+    return super.contains(pValue) as SettingFilterBuilder;
+  }
+
+  @override
+  SettingFilterBuilder startsWith(dynamic pValue) {
+    return super.startsWith(pValue) as SettingFilterBuilder;
+  }
+
+  @override
+  SettingFilterBuilder endsWith(dynamic pValue) {
+    return super.endsWith(pValue) as SettingFilterBuilder;
+  }
+
+  @override
+  SettingFilterBuilder between(dynamic pFirst, dynamic pLast) {
+    return super.between(pFirst, pLast) as SettingFilterBuilder;
+  }
+
+  @override
+  SettingFilterBuilder greaterThan(dynamic pValue) {
+    return super.greaterThan(pValue) as SettingFilterBuilder;
+  }
+
+  @override
+  SettingFilterBuilder lessThan(dynamic pValue) {
+    return super.lessThan(pValue) as SettingFilterBuilder;
+  }
+
+  @override
+  SettingFilterBuilder greaterThanOrEquals(dynamic pValue) {
+    return super.greaterThanOrEquals(pValue) as SettingFilterBuilder;
+  }
+
+  @override
+  SettingFilterBuilder lessThanOrEquals(dynamic pValue) {
+    return super.lessThanOrEquals(pValue) as SettingFilterBuilder;
+  }
+
+  @override
+  SettingFilterBuilder inValues(dynamic pValue) {
+    return super.inValues(pValue) as SettingFilterBuilder;
+  }
+
+  @override
+  SettingField get not {
+    return super.not as SettingField;
+  }
+}
+// endregion SettingField
+
+// region SettingFilterBuilder
+class SettingFilterBuilder extends ConjunctionBase {
+  SettingFilterBuilder(Setting obj, bool? getIsDeleted)
+      : super(obj, getIsDeleted) {
+    _mnSetting = obj._mnSetting;
+    _softDeleteActivated = obj.softDeleteActivated;
+  }
+
+  bool _softDeleteActivated = false;
+  SettingManager? _mnSetting;
+
+  /// put the sql keyword 'AND'
+  @override
+  SettingFilterBuilder get and {
+    super.and;
+    return this;
+  }
+
+  /// put the sql keyword 'OR'
+  @override
+  SettingFilterBuilder get or {
+    super.or;
+    return this;
+  }
+
+  /// open parentheses
+  @override
+  SettingFilterBuilder get startBlock {
+    super.startBlock;
+    return this;
+  }
+
+  /// String whereCriteria, write raw query without 'where' keyword. Like this: 'field1 like 'test%' and field2 = 3'
+  @override
+  SettingFilterBuilder where(String? whereCriteria, {dynamic parameterValue}) {
+    super.where(whereCriteria, parameterValue: parameterValue);
+    return this;
+  }
+
+  /// page = page number,
+  /// pagesize = row(s) per page
+  @override
+  SettingFilterBuilder page(int page, int pagesize) {
+    super.page(page, pagesize);
+    return this;
+  }
+
+  /// int count = LIMIT
+  @override
+  SettingFilterBuilder top(int count) {
+    super.top(count);
+    return this;
+  }
+
+  /// close parentheses
+  @override
+  SettingFilterBuilder get endBlock {
+    super.endBlock;
+    return this;
+  }
+
+  /// argFields might be String or List<String>.
+  /// Example 1: argFields='name, date'
+  /// Example 2: argFields = ['name', 'date']
+  @override
+  SettingFilterBuilder orderBy(dynamic argFields) {
+    super.orderBy(argFields);
+    return this;
+  }
+
+  /// argFields might be String or List<String>.
+  /// Example 1: argFields='field1, field2'
+  /// Example 2: argFields = ['field1', 'field2']
+  @override
+  SettingFilterBuilder orderByDesc(dynamic argFields) {
+    super.orderByDesc(argFields);
+    return this;
+  }
+
+  /// argFields might be String or List<String>.
+  /// Example 1: argFields='field1, field2'
+  /// Example 2: argFields = ['field1', 'field2']
+  @override
+  SettingFilterBuilder groupBy(dynamic argFields) {
+    super.groupBy(argFields);
+    return this;
+  }
+
+  /// argFields might be String or List<String>.
+  /// Example 1: argFields='name, date'
+  /// Example 2: argFields = ['name', 'date']
+  @override
+  SettingFilterBuilder having(dynamic argFields) {
+    super.having(argFields);
+    return this;
+  }
+
+  SettingField _setField(SettingField? field, String colName, DbType dbtype) {
+    return SettingField(this)
+      ..param = DbParameter(
+          dbType: dbtype, columnName: colName, wStartBlock: openedBlock);
+  }
+
+  SettingField? _id;
+  SettingField get id {
+    return _id = _setField(_id, 'id', DbType.integer);
+  }
+
+  SettingField? _auto_backup;
+  SettingField get auto_backup {
+    return _auto_backup = _setField(_auto_backup, 'auto_backup', DbType.bool);
+  }
+
+  SettingField? _created_at;
+  SettingField get created_at {
+    return _created_at = _setField(_created_at, 'created_at', DbType.datetime);
+  }
+
+  SettingField? _updated_at;
+  SettingField get updated_at {
+    return _updated_at = _setField(_updated_at, 'updated_at', DbType.datetime);
+  }
+
+  /// Deletes List<Setting> bulk by query
+  ///
+  /// <returns>BoolResult res.success= true (Deleted), false (Could not be deleted)
+  @override
+  Future<BoolResult> delete([bool hardDelete = false]) async {
+    buildParameters();
+    var r = BoolResult(success: false);
+
+    if (_softDeleteActivated && !hardDelete) {
+      r = await _mnSetting!.updateBatch(qparams, {'isDeleted': 1});
+    } else {
+      r = await _mnSetting!.delete(qparams);
+    }
+    return r;
+  }
+
+  /// using:
+  /// update({'fieldName': Value})
+  /// fieldName must be String. Value is dynamic, it can be any of the (int, bool, String.. )
+  @override
+  Future<BoolResult> update(Map<String, dynamic> values) {
+    buildParameters();
+    if (qparams.limit! > 0 || qparams.offset! > 0) {
+      qparams.whereString =
+          'id IN (SELECT id from settings ${qparams.whereString!.isNotEmpty ? 'WHERE ${qparams.whereString}' : ''}${qparams.limit! > 0 ? ' LIMIT ${qparams.limit}' : ''}${qparams.offset! > 0 ? ' OFFSET ${qparams.offset}' : ''})';
+    }
+    return _mnSetting!.updateBatch(qparams, values);
+  }
+
+  /// This method always returns [Setting] Obj if exist, otherwise returns null
+  /// bool preload: if true, loads all related child objects (Set preload to true if you want to load all fields related to child or parent)
+  /// ex: toSingle(preload:true) -> Loads all related objects
+  /// List<String> preloadFields: specify the fields you want to preload (preload parameter's value should also be "true")
+  /// ex: toSingle(preload:true, preloadFields:['plField1','plField2'... etc])  -> Loads only certain fields what you specified
+  /// bool loadParents: if true, loads all parent objects until the object has no parent
+
+  /// <returns> Setting?
+  @override
+  Future<Setting?> toSingle(
+      {bool preload = false,
+      List<String>? preloadFields,
+      bool loadParents = false,
+      List<String>? loadedFields}) async {
+    buildParameters(pSize: 1);
+    final objFuture = _mnSetting!.toList(qparams);
+    final data = await objFuture;
+    Setting? obj;
+    if (data.isNotEmpty) {
+      obj = Setting.fromMap(data[0] as Map<String, dynamic>);
+    } else {
+      obj = null;
+    }
+    return obj;
+  }
+
+  /// This method always returns [Setting]
+  /// bool preload: if true, loads all related child objects (Set preload to true if you want to load all fields related to child or parent)
+  /// ex: toSingle(preload:true) -> Loads all related objects
+  /// List<String> preloadFields: specify the fields you want to preload (preload parameter's value should also be "true")
+  /// ex: toSingle(preload:true, preloadFields:['plField1','plField2'... etc])  -> Loads only certain fields what you specified
+  /// bool loadParents: if true, loads all parent objects until the object has no parent
+
+  /// <returns> Setting?
+  @override
+  Future<Setting> toSingleOrDefault(
+      {bool preload = false,
+      List<String>? preloadFields,
+      bool loadParents = false,
+      List<String>? loadedFields}) async {
+    return await toSingle(
+            preload: preload,
+            preloadFields: preloadFields,
+            loadParents: loadParents,
+            loadedFields: loadedFields) ??
+        Setting();
+  }
+
+  /// This method returns int. [Setting]
+  /// <returns>int
+  @override
+  Future<int> toCount([VoidCallback Function(int c)? settingCount]) async {
+    buildParameters();
+    qparams.selectColumns = ['COUNT(1) AS CNT'];
+    final settingsFuture = await _mnSetting!.toList(qparams);
+    final int count = settingsFuture[0]['CNT'] as int;
+    if (settingCount != null) {
+      settingCount(count);
+    }
+    return count;
+  }
+
+  /// This method returns List<Setting> [Setting]
+  /// bool preload: if true, loads all related child objects (Set preload to true if you want to load all fields related to child or parent)
+  /// ex: toList(preload:true) -> Loads all related objects
+  /// List<String> preloadFields: specify the fields you want to preload (preload parameter's value should also be "true")
+  /// ex: toList(preload:true, preloadFields:['plField1','plField2'... etc])  -> Loads only certain fields what you specified
+  /// bool loadParents: if true, loads all parent objects until the object has no parent
+
+  /// <returns>List<Setting>
+  @override
+  Future<List<Setting>> toList(
+      {bool preload = false,
+      List<String>? preloadFields,
+      bool loadParents = false,
+      List<String>? loadedFields}) async {
+    final data = await toMapList();
+    final List<Setting> settingsData = await Setting.fromMapList(data,
+        preload: preload,
+        preloadFields: preloadFields,
+        loadParents: loadParents,
+        loadedFields: loadedFields,
+        setDefaultValues: qparams.selectColumns == null);
+    return settingsData;
+  }
+
+  /// This method returns Json String [Setting]
+  @override
+  Future<String> toJson() async {
+    final list = <dynamic>[];
+    final data = await toList();
+    for (var o in data) {
+      list.add(o.toMap(forJson: true));
+    }
+    return json.encode(list);
+  }
+
+  /// This method returns Json String. [Setting]
+  @override
+  Future<String> toJsonWithChilds() async {
+    final list = <dynamic>[];
+    final data = await toList();
+    for (var o in data) {
+      list.add(await o.toMapWithChildren(false, true));
+    }
+    return json.encode(list);
+  }
+
+  /// This method returns List<dynamic>. [Setting]
+  /// <returns>List<dynamic>
+  @override
+  Future<List<dynamic>> toMapList() async {
+    buildParameters();
+    return await _mnSetting!.toList(qparams);
+  }
+
+  /// This method returns Primary Key List SQL and Parameters retVal = Map<String,dynamic>. [Setting]
+  /// retVal['sql'] = SQL statement string, retVal['args'] = whereArguments List<dynamic>;
+  /// <returns>List<String>
+  @override
+  Map<String, dynamic> toListPrimaryKeySQL([bool buildParams = true]) {
+    final Map<String, dynamic> _retVal = <String, dynamic>{};
+    if (buildParams) {
+      buildParameters();
+    }
+    _retVal['sql'] = 'SELECT `id` FROM settings WHERE ${qparams.whereString}';
+    _retVal['args'] = qparams.whereArguments;
+    return _retVal;
+  }
+
+  /// This method returns Primary Key List<int>.
+  /// <returns>List<int>
+  @override
+  Future<List<int>> toListPrimaryKey([bool buildParams = true]) async {
+    if (buildParams) {
+      buildParameters();
+    }
+    final List<int> idData = <int>[];
+    qparams.selectColumns = ['id'];
+    final idFuture = await _mnSetting!.toList(qparams);
+
+    final int count = idFuture.length;
+    for (int i = 0; i < count; i++) {
+      idData.add(idFuture[i]['id'] as int);
+    }
+    return idData;
+  }
+
+  /// Returns List<dynamic> for selected columns. Use this method for 'groupBy' with min,max,avg..  [Setting]
+  /// Sample usage: (see EXAMPLE 4.2 at https://github.com/hhtokpinar/sqfEntity#group-by)
+  @override
+  Future<List<dynamic>> toListObject() async {
+    buildParameters();
+
+    final objectFuture = _mnSetting!.toList(qparams);
+
+    final List<dynamic> objectsData = <dynamic>[];
+    final data = await objectFuture;
+    final int count = data.length;
+    for (int i = 0; i < count; i++) {
+      objectsData.add(data[i]);
+    }
+    return objectsData;
+  }
+
+  /// Returns List<String> for selected first column
+  /// Sample usage: await Setting.select(columnsToSelect: ['columnName']).toListString()
+  @override
+  Future<List<String>> toListString(
+      [VoidCallback Function(List<String> o)? listString]) async {
+    buildParameters();
+
+    final objectFuture = _mnSetting!.toList(qparams);
+
+    final List<String> objectsData = <String>[];
+    final data = await objectFuture;
+    final int count = data.length;
+    for (int i = 0; i < count; i++) {
+      objectsData.add(data[i][qparams.selectColumns![0]].toString());
+    }
+    if (listString != null) {
+      listString(objectsData);
+    }
+    return objectsData;
+  }
+}
+// endregion SettingFilterBuilder
+
+// region SettingFields
+class SettingFields {
+  static TableField? _fId;
+  static TableField get id {
+    return _fId = _fId ?? SqlSyntax.setField(_fId, 'id', DbType.integer);
+  }
+
+  static TableField? _fAuto_backup;
+  static TableField get auto_backup {
+    return _fAuto_backup = _fAuto_backup ??
+        SqlSyntax.setField(_fAuto_backup, 'auto_backup', DbType.bool);
+  }
+
+  static TableField? _fCreated_at;
+  static TableField get created_at {
+    return _fCreated_at = _fCreated_at ??
+        SqlSyntax.setField(_fCreated_at, 'created_at', DbType.datetime);
+  }
+
+  static TableField? _fUpdated_at;
+  static TableField get updated_at {
+    return _fUpdated_at = _fUpdated_at ??
+        SqlSyntax.setField(_fUpdated_at, 'updated_at', DbType.datetime);
+  }
+}
+// endregion SettingFields
+
+//region SettingManager
+class SettingManager extends SqfEntityProvider {
+  SettingManager()
+      : super(DbModel(),
+            tableName: _tableName,
+            primaryKeyList: _primaryKeyList,
+            whereStr: _whereStr);
+  static const String _tableName = 'settings';
+  static const List<String> _primaryKeyList = ['id'];
+  static const String _whereStr = 'id=?';
+}
+
+//endregion SettingManager
 /// Region SEQUENCE IdentitySequence
 class IdentitySequence {
   /// Assigns a new value when it is triggered and returns the new value

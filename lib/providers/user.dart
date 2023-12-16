@@ -4,9 +4,8 @@ import 'package:workout_performance_tracker/class/google.dart';
 
 class UserState {
   final GoogleSignInAccount? currentUser;
-  final bool automaticBackup;
 
-  UserState({this.currentUser, this.automaticBackup = false});
+  UserState({this.currentUser});
 }
 
 class UserNotifier extends StateNotifier<UserState> {
@@ -16,19 +15,14 @@ class UserNotifier extends StateNotifier<UserState> {
     state = UserState(currentUser: user);
   }
 
-  Future<GoogleSignInAccount?> getCurrentUser() async {
-    final user = await Google.getLoggedUser();
+  Future<GoogleSignInAccount?> getCurrentUser({
+    bool silentlyOnly = false,
+  }) async {
+    final user = await Google.getLoggedUser(silentlyOnly: silentlyOnly);
 
     setCurrentUser(user);
 
     return user;
-  }
-
-  void setAutomaticBackup(bool automaticBackup) {
-    state = UserState(
-      currentUser: state.currentUser,
-      automaticBackup: automaticBackup,
-    );
   }
 }
 

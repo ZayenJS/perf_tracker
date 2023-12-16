@@ -2,16 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workout_performance_tracker/class/google.dart';
 import 'package:workout_performance_tracker/models/performance.dart';
+import 'package:workout_performance_tracker/providers/settings.dart';
 import 'package:workout_performance_tracker/providers/user.dart';
 import 'package:workout_performance_tracker/utils/main.dart';
 
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  bool _isLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
     final userState = ref.watch(userProvider);
     final userNotifier = ref.read(userProvider.notifier);
+    final settings = ref.watch(settingsProvider);
+    final settingsNotifier = ref.read(settingsProvider.notifier);
+
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final theme = Theme.of(context);
 
     return SingleChildScrollView(
       child: Padding(
@@ -95,9 +108,27 @@ class SettingsScreen extends ConsumerWidget {
                               ),
                             ),
                             SwitchListTile(
-                              value: userState.automaticBackup,
-                              onChanged: (value) {
-                                userNotifier.setAutomaticBackup(value);
+                              value: settings.autoBackup,
+                              onChanged: (value) async {
+                                settingsNotifier.setAutoBackup(value);
+
+                                if (value) {
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+
+                                  await Google.driveBackupPerformances();
+
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+
+                                  showSnackBar(
+                                    scaffoldMessenger,
+                                    theme,
+                                    "Backup to Google Drive successful",
+                                  );
+                                }
                               },
                               title: const Text('Automatic Backup'),
                               subtitle: const Text(
@@ -110,16 +141,36 @@ class SettingsScreen extends ConsumerWidget {
                                 width: 24,
                                 height: 24,
                               ),
-                              title: const Text('Backup to Google Drive'),
+                              title: _isLoading
+                                  ? const Center(
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  : const Text('Backup to Google Drive'),
                               onTap: () async {
                                 final scaffoldMessenger =
                                     ScaffoldMessenger.of(context);
                                 final theme = Theme.of(context);
 
                                 try {
-                                  final data = await Performance.formatForCsv();
-                                  Google.driveBackup(data);
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+
+                                  await Google.driveBackupPerformances();
+
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+
+                                  showSnackBar(
+                                    scaffoldMessenger,
+                                    theme,
+                                    "Backup to Google Drive successful",
+                                  );
                                 } catch (e) {
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
                                   final message =
                                       'Error backing up with Google: $e';
 

@@ -6,11 +6,11 @@ class AppPopupMenuButton extends StatelessWidget {
   final void Function(dynamic)? onSelected;
 
   const AppPopupMenuButton({
-    Key? key,
+    super.key,
     required this.children,
     this.iconData,
     this.onSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
