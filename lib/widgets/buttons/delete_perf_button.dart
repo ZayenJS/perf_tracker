@@ -10,8 +10,7 @@ import 'package:workout_performance_tracker/utils/main.dart';
 class DeletePerfButton extends ConsumerWidget {
   final PerformanceDetail Function() latestData;
 
-  const DeletePerfButton({Key? key, required this.latestData})
-      : super(key: key);
+  const DeletePerfButton({super.key, required this.latestData});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -156,7 +156,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                     _isLoading = true;
                                   });
 
-                                  await Google.driveBackupPerformances();
+                                  await Google.driveBackupPerformances(
+                                    userAction: true,
+                                  );
 
                                   setState(() {
                                     _isLoading = false;

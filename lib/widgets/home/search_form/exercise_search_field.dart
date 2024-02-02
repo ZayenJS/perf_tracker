@@ -21,11 +21,11 @@ class ExerciseSearchField extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5.0),
         ),
-        thumbColor: Theme.of(context).primaryColor,
+        thumbColor: Theme.of(context).colorScheme.primary,
       ),
       suggestionsDecoration: SuggestionDecoration(
         border: Border.all(
-          color: Theme.of(context).primaryColor.withOpacity(0.5),
+          color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
         ),
         borderRadius:
             const BorderRadius.vertical(bottom: Radius.circular(10.0)),

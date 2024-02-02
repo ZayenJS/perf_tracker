@@ -172,7 +172,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                       foregroundColor: Theme.of(context).colorScheme.onPrimary,
                     ),
                     child: const Text("Search"),

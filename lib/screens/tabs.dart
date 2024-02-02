@@ -57,22 +57,21 @@ class _TabsScreenState extends ConsumerState<TabsScreen>
 
     _updateTableData();
 
-    ref
-        .read(userProvider.notifier)
-        .getCurrentUser(silentlyOnly: true)
-        .then((user) async {
-      if (user == null) {
-        return;
-      }
+    ref.read(userProvider.notifier).getCurrentUser(silentlyOnly: true).then(
+      (user) async {
+        if (user == null) {
+          return;
+        }
 
-      final isBackupEnabled = ref.read(settingsProvider).autoBackup;
+        final isBackupEnabled = ref.read(settingsProvider).autoBackup;
 
-      if (!isBackupEnabled) {
-        return;
-      }
+        if (!isBackupEnabled) {
+          return;
+        }
 
-      Google.driveBackupPerformances();
-    });
+        Google.driveBackupPerformances();
+      },
+    );
   }
 
   @override

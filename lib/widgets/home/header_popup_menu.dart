@@ -21,7 +21,7 @@ class HeaderPopupMenu extends ConsumerWidget {
     ThemeData theme,
   ) async {
     final file = await AppFileSystem.pickCSVFileToImport();
-
+    printDebug(file, before: "=");
     if (file == null) {
       return;
     }

@@ -23,6 +23,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
 }) {
   return scaffoldMessenger.showSnackBar(
     SnackBar(
+      showCloseIcon: true,
       backgroundColor:
           isError ? theme.colorScheme.error : theme.colorScheme.primary,
       content: Text(

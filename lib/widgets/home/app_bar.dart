@@ -10,8 +10,9 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: const Text("Perf Tracker"),
-      backgroundColor: Theme.of(context).primaryColor,
+      title: const Text("Workout Performance Tracker"),
+      titleTextStyle: const TextStyle(fontSize: 17),
+      backgroundColor: Theme.of(context).colorScheme.primary,
       foregroundColor: Theme.of(context).colorScheme.onPrimary,
       actions: const [
         HeaderPopupMenu(),

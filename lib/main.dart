@@ -9,7 +9,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // await DbModel().initializeDB();
-
   // await loadInitialData();
 
   runApp(
@@ -48,8 +47,8 @@ class _AppState extends ConsumerState<App> {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.deepPurple,
-            error: const Color.fromARGB(255, 183, 47, 37),
+            seedColor: const Color.fromARGB(255, 140, 137, 157),
+            error: Color.fromARGB(255, 184, 73, 65),
             onError: Colors.white,
           ),
           useMaterial3: true,

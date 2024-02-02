@@ -8,7 +8,7 @@ const exercisesTable = SqfEntityTable(
   useSoftDeleting: false,
   modelName: "Exercise",
   fields: [
-    SqfEntityField('name', DbType.text, isNotNull: true),
+    SqfEntityField('name', DbType.text, isNotNull: true, isUnique: true),
     ...timestamps,
   ],
 );

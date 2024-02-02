@@ -56,14 +56,14 @@ class Google {
     }
   }
 
-  static Future driveBackupPerformances() async {
+  static Future driveBackupPerformances({bool userAction = false}) async {
     final data = await AppPerformance.formatForCsv();
 
-    await driveBackup(data);
+    await driveBackup(data, userAction: userAction);
     printDebug('Backup to Google Drive completed');
   }
 
-  static Future driveBackup(String data) async {
+  static Future driveBackup(String data, {bool userAction = false}) async {
     var client = await getAuthenticatedClient();
 
     if (client == null) {
@@ -74,7 +74,19 @@ class Google {
     ga.File fileToUpload = ga.File();
 
     final directory = await getApplicationCacheDirectory();
-    const fileName = 'WorkoutPerformanceTracker.backup.auto.csv';
+
+    String fileName = 'WPT.backup';
+
+    if (kDebugMode) {
+      fileName += '.debug';
+    }
+
+    if (!userAction) {
+      fileName += '.auto';
+    }
+
+    fileName += '.csv';
+
     final File file = await File(
       '${directory.path}/$fileName',
     ).writeAsString(data);
